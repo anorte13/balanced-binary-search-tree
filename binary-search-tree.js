@@ -43,7 +43,38 @@ class Tree {
       this.prettyPrint(node.left, `${prefix}${isLeft ? "    " : "|   "}`, true);
     }
   }
+  insert(value) {
+    let current = this.root;
+    while (current) {
+      if (current.data === value) {
+        console.log("The value " + value + " has been found");
+        return;
+      }
+      if (current.data > value) {
+        current = current.left;
+        while (current) {
+          if (current.data === value) {
+            console.log("The value " + value + " has been found");
+            return;
+          }
+          current = current.left;
+        }
+      }
+      if (current.data < value) {
+        current = current.right;
+        while (current) {
+          if (current.data === value) {
+            console.log("The value " + value + " has been found");
+            return;
+          }
+          current = current.right;
+        }
+      }
+    }
+    return console.log("The value was not found");
+  }
 }
 const binaryArray = [1, 2, 3, 4, 5, 6, 7];
 const tree = new Tree(binaryArray);
 tree.prettyPrint();
+tree.insert(2);
