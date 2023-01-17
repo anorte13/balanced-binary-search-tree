@@ -1,3 +1,4 @@
+//creates a Node class with data as the node value and pointers to left and right values
 class Node {
   constructor(data = null, left = null, right = null) {
     this.data = data;
@@ -5,29 +6,44 @@ class Node {
     this.right = right;
   }
 }
+//creates the Tree class which holds methods for creating Tree
 class Tree {
-  constructor() {
-    this.binaryList = [];
-    this.root = this.buildTree(this.binaryList);
+  constructor(arr) {
+    this.root = this.buildTree(arr);
   }
-  buildTree(data) {
-    if (data === 1) {
-      return data;
+  #sortAndRemoveDuplicates(arr) {
+    const sorted = [...new Set(arr)].sort((a, b) => a - b);
+    return sorted;
+  }
+  buildTree(array) {
+    let sorted = this.#sortAndRemoveDuplicates(array);
+    if (sorted.length === 0) {
+      return null;
     }
-    data.sort(function (a, b) {
-      return a - b;
-    });
-    let sortedArray = data.filter(function (item, pos) {
-      return data.indexOf(item) == pos;
-    });
-    console.log(sortedArray);
-    let start = 0;
-    let end = data.length - 1;
-    let midpoint = Math.round(start + end / 2);
-    let root = midpoint;
+    const start = 0;
+    const end = sorted.length - 1;
+    const mid = parseInt(start + end / 2);
+    let root = new Node(
+      sorted[mid],
+      this.buildTree(sorted.slice(0, mid)),
+      this.buildTree(sorted.slice(mid + 1))
+    );
     return root;
   }
+  prettyPrint(node = this.root, prefix = "", isLeft = true) {
+    if (node.right) {
+      this.prettyPrint(
+        node.right,
+        `${prefix}${isLeft ? "|   " : "    "}`,
+        false
+      );
+    }
+    console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
+    if (node.left) {
+      this.prettyPrint(node.left, `${prefix}${isLeft ? "    " : "|   "}`, true);
+    }
+  }
 }
-const tree = new Tree();
-const binaryArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-console.log(tree.buildTree(binaryArray));
+const binaryArray = [1, 2, 3, 4, 5, 6, 7];
+const tree = new Tree(binaryArray);
+tree.prettyPrint();
