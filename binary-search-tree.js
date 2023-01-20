@@ -15,6 +15,7 @@ class Tree {
     const sorted = [...new Set(arr)].sort((a, b) => a - b);
     return sorted;
   }
+  //builds tree with given array, sorts it, removes duplicates and returns the root node
   buildTree(array) {
     let sorted = this.#sortAndRemoveDuplicates(array);
     if (sorted.length === 0) {
@@ -30,6 +31,7 @@ class Tree {
     );
     return root;
   }
+  //prints out the values in an easy to read format to console
   prettyPrint(node = this.root, prefix = "", isLeft = true) {
     if (node.right) {
       this.prettyPrint(
@@ -43,38 +45,23 @@ class Tree {
       this.prettyPrint(node.left, `${prefix}${isLeft ? "    " : "|   "}`, true);
     }
   }
-  insert(value) {
-    let current = this.root;
-    while (current) {
-      if (current.data === value) {
-        console.log("The value " + value + " has been found");
-        return;
+  //uses recursion to look thorugh each node for ther given value
+  find(value, root = this.root) {
+    const node = root;
+    if (node.data === null) {
+      if (node.data === value) {
+        return console.log("Value: " + value + " was found!");
       }
-      if (current.data > value) {
-        current = current.left;
-        while (current) {
-          if (current.data === value) {
-            console.log("The value " + value + " has been found");
-            return;
-          }
-          current = current.left;
-        }
-      }
-      if (current.data < value) {
-        current = current.right;
-        while (current) {
-          if (current.data === value) {
-            console.log("The value " + value + " has been found");
-            return;
-          }
-          current = current.right;
-        }
+      if (node.data > value) {
+        return this.find(value, node.left);
+      } else {
+        return this.find(value, node.right);
       }
     }
-    return console.log("The value was not found");
+    return console.log("Value: " + value + " was NOT found!");
   }
 }
 const binaryArray = [1, 2, 3, 4, 5, 6, 7];
 const tree = new Tree(binaryArray);
 tree.prettyPrint();
-tree.insert(2);
+tree.find(10);
