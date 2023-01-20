@@ -45,23 +45,60 @@ class Tree {
       this.prettyPrint(node.left, `${prefix}${isLeft ? "    " : "|   "}`, true);
     }
   }
+  //inserts value into new "leaf" without changing the current tree
+  insert(value, root = this.root) {
+    if (root === null) {
+      root = new Node(value);
+      return root;
+    }
+    if (value < root.data) {
+      root.left = this.insert(value, root.left);
+    } else if (value > root.data) {
+      root.right = this.insert(value, root.right);
+    }
+    return root;
+  }
+  //needs work
+  delete(value, root = this.root) {
+    if (root === null) {
+      return root;
+    }
+    if (value < root.data) {
+      root.left = this.delete(value, root.left);
+    } else if (value > root.data) {
+      root.right = this.delete(value, root.right);
+    }
+    return root;
+  }
   //uses recursion to look thorugh each node for ther given value
   find(value, root = this.root) {
     const node = root;
-    if (node.data === null) {
-      if (node.data === value) {
-        return console.log("Value: " + value + " was found!");
-      }
-      if (node.data > value) {
-        return this.find(value, node.left);
-      } else {
-        return this.find(value, node.right);
-      }
+    if (node === null) return null;
+    if (node.data === value) {
+      return console.log("Value: " + value + " was found!");
     }
-    return console.log("Value: " + value + " was NOT found!");
+    if (node.data > value) {
+      return this.find(value, node.left);
+    } else {
+      return this.find(value, node.right);
+    }
+  }
+  height(node = this.root) {
+    if (node === null) {
+      return 0;
+    } else {
+      const left = this.height(node.left);
+      const right = this.height(node.right);
+      if (left > right) return left + 1;
+      else return right + 1;
+    }
   }
 }
 const binaryArray = [1, 2, 3, 4, 5, 6, 7];
 const tree = new Tree(binaryArray);
+tree.insert(8);
+tree.insert(20);
+tree.delete(20);
 tree.prettyPrint();
-tree.find(10);
+tree.find(20);
+console.log("Height of the tree is: " + tree.height());
