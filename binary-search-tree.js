@@ -60,15 +60,26 @@ class Tree {
   }
   //needs work
   delete(value, root = this.root) {
-    if (root === null) {
-      return root;
-    }
+    if (root === null) return root;
     if (value < root.data) {
       root.left = this.delete(value, root.left);
     } else if (value > root.data) {
       root.right = this.delete(value, root.right);
+    } else {
+      if (root.left === null) return root.right;
+      else if (root.right == null) return root.left;
+      root.data = this.#minValue(root.right);
+      root.right = this.delete(value, root.right);
     }
     return root;
+  }
+  #minValue(root) {
+    let minv = root.data;
+    while (root.left) {
+      minv = root.left.key;
+      root = root.left;
+    }
+    return minv;
   }
   //uses recursion to look thorugh each node for ther given value
   find(value, root = this.root) {
@@ -83,6 +94,7 @@ class Tree {
       return this.find(value, node.right);
     }
   }
+  //check for height of the given tree
   height(node = this.root) {
     if (node === null) {
       return 0;
@@ -98,7 +110,10 @@ const binaryArray = [1, 2, 3, 4, 5, 6, 7];
 const tree = new Tree(binaryArray);
 tree.insert(8);
 tree.insert(20);
-tree.delete(20);
 tree.prettyPrint();
 tree.find(20);
 console.log("Height of the tree is: " + tree.height());
+tree.delete(20);
+tree.prettyPrint();
+tree.delete(6);
+tree.prettyPrint();
