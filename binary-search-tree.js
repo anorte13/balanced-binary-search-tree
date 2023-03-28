@@ -18,13 +18,10 @@ class Tree {
   //builds tree with given array, sorts it, removes duplicates and returns the root node
   buildTree(array) {
     let sorted = this.#sortAndRemoveDuplicates(array);
-    if (sorted.length === 0) {
-      return null;
-    }
-    const start = 0;
-    const end = sorted.length - 1;
-    const mid = parseInt(start + end / 2);
-    let root = new Node(
+    if (sorted.length === 0) return null;
+
+    const mid = parseInt(sorted.length / 2);
+    const root = new Node(
       sorted[mid],
       this.buildTree(sorted.slice(0, mid)),
       this.buildTree(sorted.slice(mid + 1))
@@ -58,7 +55,7 @@ class Tree {
     }
     return root;
   }
-  //needs work
+  //checks the tree and finds the corresponding value and removes it without affecting the parent nodes
   delete(value, root = this.root) {
     if (root === null) return root;
     if (value < root.data) {
@@ -105,15 +102,54 @@ class Tree {
       else return right + 1;
     }
   }
+  levelOrder(arr = [], queue = [], root = this.root) {
+    if (root === null) return;
+    arr.push(root.data);
+    queue.push(root.left);
+    queue.push(root.right);
+
+    while (queue.length) {
+      const level = queue[0];
+      queue.shift();
+      this.levelOrder(arr, queue, level);
+    }
+    return arr;
+  }
+  //vists the tree and begins at the root of left subtree and returns values going up the tree
+  inorder(arr = [], root = this.root) {
+    if (root === null) return;
+
+    this.inorder(arr, root.left);
+    arr.push(root.data);
+    this.inorder(arr, root.right);
+    return arr;
+  }
+  preorder(arr = [], root = this.root) {
+    if (root === null) return;
+
+    arr.push(root.data);
+    this.preorder(arr, root.left);
+    this.preorder(arr, root.right);
+    return arr;
+  }
+  postorder(arr = [], root = this.root) {
+    if (root === null) return;
+
+    this.postorder(arr, root.left);
+    this.postorder(arr, root.right);
+    arr.push(root.data);
+
+    return arr;
+  }
 }
-const binaryArray = [1, 2, 3, 4, 5, 6, 7];
+/*
+  depth()
+  isBalanced()
+  rebalance()
+  */
+
+const binaryArray = [5, 10, 39, 1];
 const tree = new Tree(binaryArray);
-tree.insert(8);
-tree.insert(20);
+
 tree.prettyPrint();
-tree.find(20);
-console.log("Height of the tree is: " + tree.height());
-tree.delete(20);
-tree.prettyPrint();
-tree.delete(6);
-tree.prettyPrint();
+console.log(tree.postorder());
