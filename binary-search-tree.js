@@ -141,15 +141,37 @@ class Tree {
 
     return arr;
   }
+  depth(node, root = this.root, depth = 1) {
+    if (root === null) return 0;
+
+    if (root.data === node) {
+      return depth;
+    }
+    if (root.data > node) {
+      return this.depth(node, root.left, depth + 1);
+    } else {
+      return this.depth(node, root.right, depth + 1);
+    }
+  }
+  isBalanced(root = this.root) {
+    if (root === null) return null;
+
+    const left = this.height(root.left);
+    const right = this.height(root.right);
+    const diff = Math.abs(left - right);
+    if (diff < 2) return true;
+    else return false;
+  }
+  rebalance(root = this.root) {
+    let newTree = [];
+    if (root === null) return null;
+
+    this.inorder(newTree, root.left);
+    newTree.push(root.data);
+    this.inorder(newTree, root.right);
+
+    return (this.root = this.buildTree(newTree));
+  }
 }
-/*
-  depth()
-  isBalanced()
-  rebalance()
-  */
-
-const binaryArray = [5, 10, 39, 1];
-const tree = new Tree(binaryArray);
-
-tree.prettyPrint();
-console.log(tree.postorder());
+module.exports = Node;
+module.exports = Tree;
